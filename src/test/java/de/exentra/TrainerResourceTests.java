@@ -1,11 +1,7 @@
 package de.exentra;
 
-import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.when;
@@ -24,8 +20,41 @@ public class TrainerResourceTests
 			.then()
 			.assertThat()
 			.statusCode(200)
+			.and()
 			.body("$", hasSize(3))
 			.and()
 			.body("[0].name", is("Helmut"));
+	}
+
+	@Test
+	public void shouldReturnASingleTrainer()
+	{
+		when()
+			.get("1")
+			.then()
+			.assertThat()
+			.statusCode(200)
+			.and()
+			.body("name", is("Helmut"));
+	}
+
+	@Test
+	public void shouldReturnNotFound()
+	{
+		when()
+			.get("69696969")
+			.then()
+			.assertThat()
+			.statusCode(404);
+	}
+
+	@Test
+	public void shouldReturnBadRequest()
+	{
+		when()
+			.get("/      /")
+			.then()
+			.assertThat()
+			.statusCode(400);
 	}
 }
