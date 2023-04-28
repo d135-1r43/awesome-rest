@@ -21,7 +21,7 @@ public class TrainerResourceTests
 			.assertThat()
 			.statusCode(200)
 			.and()
-			.body("$", hasSize(3))
+			.body("$", hasSize(1999))
 			.and()
 			.body("[0].name", is("Helmut"));
 	}

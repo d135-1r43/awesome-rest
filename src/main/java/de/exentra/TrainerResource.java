@@ -34,10 +34,10 @@ public class TrainerResource
 	public List<PokemonTrainer> all(@BeanParam Page page)
 	{
 		List<PokemonTrainer> allTrainers = pokemonTrainerService.getAllTrainers();
-		LOG.info("Page {} with size {}", page.getPageIndex(), page.getPageSize());
-		if (page != null)
+		if (page.isDefined())
 		{
-			return getPage(allTrainers, page);
+			LOG.info("Page {} with size {}", page.getPageIndex(), page.getPageSize());
+			return Page.getPage(allTrainers, page);
 		}
 		else
 		{
@@ -58,17 +58,5 @@ public class TrainerResource
 		return pokemonTrainerService.getAllTrainers().stream()
 			.filter(t -> t.getId().equals(id))
 			.findFirst().orElseThrow(NotFoundException::new);
-	}
-
-	public static <T> List<T> getPage(List<T> list, Page page)
-	{
-		int from = page.getPageIndex() * page.getPageSize();
-		int to = from + page.getPageSize();
-
-		if (from > list.size())
-		{
-			return Collections.emptyList();
-		}
-		return list.subList(max(0, from), min(to, list.size()));
 	}
 }

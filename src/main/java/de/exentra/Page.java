@@ -2,6 +2,12 @@ package de.exentra;
 
 import jakarta.ws.rs.QueryParam;
 
+import java.util.Collections;
+import java.util.List;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class Page
 {
 	@QueryParam("pageIndex")
@@ -27,5 +33,22 @@ public class Page
 	public void setPageSize(Integer pageSize)
 	{
 		this.pageSize = pageSize;
+	}
+
+	public boolean isDefined()
+	{
+		return (pageIndex != null) && (pageSize != null);
+	}
+
+	public static <T> List<T> getPage(List<T> list, Page page)
+	{
+		int from = page.getPageIndex() * page.getPageSize();
+		int to = from + page.getPageSize();
+
+		if (from > list.size())
+		{
+			return Collections.emptyList();
+		}
+		return list.subList(max(0, from), min(to, list.size()));
 	}
 }
